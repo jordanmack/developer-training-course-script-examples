@@ -3,7 +3,7 @@ use core::result::Result;
 
 // Import heap related library from `alloc`
 // https://doc.rust-lang.org/alloc/index.html
-use alloc::vec;
+// use alloc::vec;
 
 // Import CKB syscalls and structures
 // https://nervosnetwork.github.io/ckb-std/riscv64imac-unknown-none-elf/doc/ckb_std/index.html
@@ -18,14 +18,15 @@ use crate::error::Error;
 // The modes of operation for the script. 
 enum Mode
 {
-	Burn,
-	Create,
-	Transfer,
+	Burn, // Consume an existing counter cell.
+	Create, // Create a new counter cell.
+	Transfer, // Transfer (update) a counter cell and increase its value.
 }
 
 // Determines the mode of operation for the currently executing script.
 fn determine_mode() -> Result<Mode, Error>
 {
+	// Keep track of the matching cells.
 	let mut matching_group_input_count = 0;
 	let mut matching_group_output_count = 0;
 
@@ -99,10 +100,12 @@ fn determine_mode() -> Result<Mode, Error>
 	Err(Error::InvalidTransactionStructure)
 }
 
+// Validate a transaction to create a counter cell.
 fn validate_create() -> Result<(), Error>
 {
+	// Load the output cell data and verify that the value is 0u64.
 	let cell_data = load_cell_data(0, Source::GroupOutput)?;
-	if cell_data != vec![0u8; 8]
+	if cell_data != 0u64.to_le_bytes().to_vec()
 	{
 		return Err(Error::InvalidOutputCellData);	
 	}
@@ -110,33 +113,41 @@ fn validate_create() -> Result<(), Error>
 	Ok(())
 }
 
+// Validate a transaction to transfer (update) a counter cell and increase its value.
 fn validate_transfer() -> Result<(), Error>
 {
+	// Load the input cell data and verify that the length is exactly 8, which is the length of a u64.
 	let input_data = load_cell_data(0, Source::GroupInput)?;
 	if input_data.len() != 8
 	{
 		return Err(Error::InvalidInputCellData);
 	}
 
+	// Load the output cell data and verify that the length is exactly 8, which is the length of a u64.
 	let output_data = load_cell_data(0, Source::GroupOutput)?;
 	if output_data.len() != 8
 	{
 		return Err(Error::InvalidOutputCellData);
 	}
 
+	// Create a buffer to use for parsing cell data into integers.
 	let mut buffer = [0u8; 8];
 
+	// Convert the input cell data to a u64 value.
 	buffer.copy_from_slice(&input_data[0..8]);
 	let input_value = u64::from_le_bytes(buffer);
 
+	// Convert the output cell data to a u64 value.
 	buffer.copy_from_slice(&output_data[0..8]);
 	let output_value = u64::from_le_bytes(buffer);
 
+	// Check for an overflow scenario.
 	if input_value == u64::MAX
 	{
 		return Err(Error::CounterValueOverflow);
 	}
 
+	// Ensure that the output value is always exactly one more that in the input value.
 	if input_value + 1 != output_value
 	{
 		return Err(Error::InvalidCounterValue);
@@ -145,8 +156,10 @@ fn validate_transfer() -> Result<(), Error>
 	Ok(())
 }
 
+// Main entry point.
 pub fn main() -> Result<(), Error>
 {
+	// Determine the mode and validate as needed.
 	match determine_mode()
 	{
 		Ok(Mode::Burn) => return Ok(()),
