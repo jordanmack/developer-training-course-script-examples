@@ -6,6 +6,18 @@ The content you find here is designed to be used with lessons.
 
 You can find the full developer training course on [GitBook](https://nervos.gitbook.io/developer-training-course/).
 
+**These scripts are for example purposes and should not be used in production!**
+
+## Available Scripts
+
+* **always** - A lock script that always succeeds (unlocks).
+* **ckb500** - A lock script that succeeds when the total input capacity is exactly 500 CKBytes.
+* **counter** - A type script that holds a u64 value that must be incremented by 1 on every transfer.
+* **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
+* **icclock** - A lock script that does an input capacity check (icc) to verify that at least one input cell has a capacity that matches amount x. The x value is specified in the lock script args.
+* **never** - A lock script that never succeeds (unlocks).
+* **occlock** - A lock script that does an output capacity check (occ) to verify that at least x output cells have a capacity that matches amount y. The x and y values are specified as lock script args.
+
 ## Usage
 
 Build all contracts (debug):
