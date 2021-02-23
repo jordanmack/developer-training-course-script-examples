@@ -1,0 +1,39 @@
+# [rust]
+# # path of rust contracts workspace directory,
+# # a `Cargo.toml` file is expected under the directory.
+# workspace_dir = "."
+# toolchain = "nightly-2020-09-28"
+# docker_image = "jjy0/ckb-capsule-recipe-rust:2020-9-28"
+
+# capsule version
+version = "0.4.4"
+# path of deployment config file
+deployment = "deployment.toml"
+
+[[contracts]]
+name = "always"
+template_type = "Rust"
+
+[[contracts]]
+name = "never"
+template_type = "Rust"
+
+[[contracts]]
+name = "ckb500"
+template_type = "Rust"
+
+[[contracts]]
+name = "occlock"
+template_type = "Rust"
+
+[[contracts]]
+name = "icclock"
+template_type = "Rust"
+
+[[contracts]]
+name = "hashlock"
+template_type = "Rust"
+
+[[contracts]]
+name = "counter"
+template_type = "Rust"
