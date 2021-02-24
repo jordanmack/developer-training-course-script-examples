@@ -14,21 +14,17 @@ use crate::error::Error;
 
 pub fn main() -> Result<(), Error>
 {
-	// Cycle through the GroupInput and GroupOutput.
-	for source in [Source::GroupInput, Source::GroupOutput].iter()
+	// Load the cell data from each cell.
+	for data in QueryIter::new(load_cell_data, Source::GroupOutput)
 	{
-		// Load the cell data from each cell.
-		for data in QueryIter::new(load_cell_data, *source)
+		// Validate the data if it is present.
+		if data.len() > 0
 		{
-			// Validate the data if it is present.
-			if data.len() > 0
-			{
-				// Parse the cell data into a UTF-8 string.
-				let json_str = str::from_utf8(&data).map_err(|_| Error::InvalidStringData)?;
-	
-				// Validate the string as JSON by parsing it.
-				parse_json(json_str).map_err(|_|Error::InvalidJson)?;
-			}
+			// Parse the cell data into a UTF-8 string.
+			let json_str = str::from_utf8(&data).map_err(|_| Error::InvalidStringData)?;
+
+			// Validate the string as JSON by parsing it.
+			parse_json(json_str).map_err(|_|Error::InvalidJson)?;
 		}
 	}
 
