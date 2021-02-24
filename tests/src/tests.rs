@@ -17,6 +17,8 @@ const ERROR_INVALID_TRANSACTION_STRUCTURE: i8 = 6;
 const ERROR_INVALID_INPUT_CELL_DATA: i8 = 7;
 const ERROR_INVALID_OUTPUT_CELL_DATA: i8 = 8;
 const ERROR_INVALID_COUNTER_VALUE: i8 = 9;
+const ERROR_INVALID_STRING_DATA: i8 = 5;
+const ERROR_INVALID_JSON: i8 = 6;
 
 #[test]
 fn test_ckb500_minimum_capacity()
@@ -1197,4 +1199,312 @@ fn test_counter_transfer_invalid_output_data()
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
 	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_INVALID_OUTPUT_CELL_DATA).input_type_script(0));
+}
+
+#[test]
+fn test_jsoncell_valid_string()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from("\"Hello World!\"".as_bytes().to_vec()));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
+	// println!("consume cycles: {}", cycles);
+}
+
+#[test]
+fn test_jsoncell_valid_number()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from("1234567890".as_bytes().to_vec()));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
+	// println!("consume cycles: {}", cycles);
+}
+
+#[test]
+fn test_jsoncell_valid_array()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from("[1, 2, 3, 4, 5]".as_bytes().to_vec()));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
+	// println!("consume cycles: {}", cycles);
+}
+
+#[test]
+fn test_jsoncell_valid_object()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from("{\"key\": \"value\"}".as_bytes().to_vec()));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
+	// println!("consume cycles: {}", cycles);
+}
+
+#[test]
+fn test_jsoncell_empty_data()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::new());
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_INVALID_JSON).output_type_script(0));
+}
+
+#[test]
+fn test_jsoncell_invalid_string()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from("\"Hello World!".as_bytes().to_vec()));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_INVALID_JSON).output_type_script(0));
+}
+
+#[test]
+fn test_jsoncell_invalid_utf8()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_jsoncell = context.deploy_cell(Loader::default().load_binary("jsoncell"));
+
+	// Prepare Cell Deps
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	let jsoncell_dep = CellDep::new_builder().out_point(out_point_jsoncell.clone()).build();
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_jsoncell, Default::default()).expect("script");
+
+	// Prepare Cells
+	let mut inputs = vec![];
+	let mut outputs = vec![];
+	let mut outputs_data: Vec<Bytes> = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+	let output = CellOutput::new_builder().capacity(100_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+	outputs_data.push(Bytes::from(vec![160, 161]));
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_dep(always_success_dep)
+		.cell_dep(jsoncell_dep)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_INVALID_STRING_DATA).output_type_script(0));
 }

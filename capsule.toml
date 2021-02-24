@@ -37,3 +37,7 @@ template_type = "Rust"
 [[contracts]]
 name = "counter"
 template_type = "Rust"
+
+[[contracts]]
+name = "jsoncell"
+template_type = "Rust"
