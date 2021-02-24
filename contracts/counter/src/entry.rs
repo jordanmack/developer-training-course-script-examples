@@ -1,16 +1,10 @@
 // Import from `core` instead of from `std` since we are in no-std mode
 use core::result::Result;
 
-// Import heap related library from `alloc`
-// https://doc.rust-lang.org/alloc/index.html
-// use alloc::vec;
-
 // Import CKB syscalls and structures
 // https://nervosnetwork.github.io/ckb-std/riscv64imac-unknown-none-elf/doc/ckb_std/index.html
-// use ckb_std::{debug};
 use ckb_std::ckb_constants::Source;
-use ckb_std::high_level::{load_cell_data, load_cell_type_hash};
-use ckb_std::syscalls::SysError;
+use ckb_std::high_level::{load_cell_data, load_cell_type_hash, QueryIter};
 
 // Local module imports.
 use crate::error::Error;
@@ -27,71 +21,46 @@ enum Mode
 fn determine_mode() -> Result<Mode, Error>
 {
 	// Keep track of the matching cells.
-	let mut matching_group_input_count = 0;
-	let mut matching_group_output_count = 0;
+	let mut group_input_count = 0;
+	let mut group_output_count = 0;
 
 	// Tally the number of cells with matching type scripts on the inputs and outputs.
 	for source in &[Source::GroupInput, Source::GroupOutput]
 	{
-		// Loop through all the cells.
-		let mut i = 0;
-		loop
+		// Get the type script hash. We could use multiple system calls, but we use this because it can be used to test if a type script exists.
+		for type_script in QueryIter::new(load_cell_type_hash, *source)
 		{
-			// Get the type script hash. We could use multiple system calls, but we use this because it can be used to test if a type script exists.
-			let type_script = load_cell_type_hash(i, *source);
-
-			// Check if load_cell_type_hash() executed successfully.
-			if let Ok(ref type_script) = type_script
+			// If the type script exists. 
+			if type_script.is_some()
 			{
-				// If the type script exists. 
-				if type_script.is_some()
+				// Increment the variable based on which input source is being used.
+				if source == &Source::GroupInput
 				{
-					// Increment the variable based on which input source is being used.
-					if source == &Source::GroupInput
-					{
-						matching_group_input_count += 1;
-					}
-					else
-					{
-						matching_group_output_count += 1;
-					}
+					group_input_count += 1;
 				}
-				// If a type script doesn't exist, there is a problem. This script might be being used as a lock script.
 				else
 				{
-					return Err(Error::InvalidTransactionStructure);
+					group_output_count += 1;
 				}
 			}
-
-			// Check if a syscall error was received.
-			if let Err(error) = type_script
+			// If a type script doesn't exist, there is a problem. This script might be being used as a lock script.
+			else
 			{
-				// If we get an out of bounds error, we are at the end of the source array. This is expected.
-				if error == SysError::IndexOutOfBound
-				{
-					break;
-				}
-				// We received some kind of unexpected syscall error.
-				else
-				{
-					return Err(error.into());
-				}
+				return Err(Error::InvalidTransactionStructure);
 			}
-	
-			i += 1;
 		}
 	}
 
 	// Detect the operation based on the cell count.
-	if matching_group_input_count == 1 && matching_group_output_count == 0
+	if group_input_count == 1 && group_output_count == 0
 	{
 		return Ok(Mode::Burn);
 	}
-	if matching_group_input_count == 0 && matching_group_output_count == 1
+	if group_input_count == 0 && group_output_count == 1
 	{
 		return Ok(Mode::Create);
 	}
-	if matching_group_input_count == 1 && matching_group_output_count == 1
+	if group_input_count == 1 && group_output_count == 1
 	{
 		return Ok(Mode::Transfer);
 	}
