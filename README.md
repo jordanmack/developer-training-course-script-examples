@@ -15,6 +15,7 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **counter** - A type script that holds a u64 value that must be incremented by 1 on every transfer.
 * **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
 * **icclock** - A lock script that does an input capacity check (icc) to verify that at least one input cell has a capacity that matches amount x. The x value is specified in the lock script args.
+* **jsoncell** - A type script that only allows valid JSON strings to be stored as cell data.
 * **never** - A lock script that never succeeds (unlocks).
 * **occlock** - A lock script that does an output capacity check (occ) to verify that at least x output cells have a capacity that matches amount y. The x and y values are specified as lock script args.
 
