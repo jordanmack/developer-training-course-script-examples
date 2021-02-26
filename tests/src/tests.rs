@@ -1417,8 +1417,8 @@ fn test_jsoncell_empty_data()
 	let tx = context.complete_tx(tx);
 
 	// Run
-	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
-	// println!("consume cycles: {}", cycles);
+	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_INVALID_JSON).output_type_script(0));
 }
 
 #[test]
