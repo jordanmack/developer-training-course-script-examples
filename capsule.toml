@@ -41,3 +41,11 @@ template_type = "Rust"
 [[contracts]]
 name = "jsoncell"
 template_type = "Rust"
+
+[[contracts]]
+name = "datacap"
+template_type = "Rust"
+
+[[contracts]]
+name = "data10"
+template_type = "Rust"
