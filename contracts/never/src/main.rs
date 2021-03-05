@@ -19,6 +19,5 @@ default_alloc!();
 
 /// program entry
 fn program_entry() -> i8 {
-1
+    1
 }
-
