@@ -55,4 +55,3 @@ pub fn main() -> Result<(), Error>
 
 	Err(Error::Unauthorized)
 }
-
