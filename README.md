@@ -10,13 +10,15 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 
 ## Available Scripts
 
-* **always** - A lock script that always succeeds (unlocks).
+* **always** - A lock script that always succeeds (unlocks). This is also known as the "Always Success" lock script.
 * **ckb500** - A lock script that succeeds when the total input capacity is exactly 500 CKBytes.
 * **counter** - A type script that holds a u64 value that must be incremented by 1 on every transfer.
 * **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
+* **ic3type** - A type script that succeeds when the total number of input cells is exactly 3.
 * **icclock** - A lock script that does an input capacity check (icc) to verify that at least one input cell has a capacity that matches amount x. The x value is specified in the lock script args.
+* **icctype** - A type script that succeeds when the total number of input cells is equal to the number specified in the type script args.
 * **jsoncell** - A type script that only allows valid JSON strings to be stored as cell data.
-* **never** - A lock script that never succeeds (unlocks).
+* **never** - A lock script that never succeeds (unlocks). This is also known as the "Always Fail" lock script.
 * **occlock** - A lock script that does an output capacity check (occ) to verify that at least x output cells have a capacity that matches amount y. The x and y values are specified as lock script args.
 
 ## Usage
