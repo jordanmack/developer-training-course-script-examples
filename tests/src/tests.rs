@@ -24,6 +24,8 @@ const ERROR_DATA10_DATA_LIMIT_EXCEEDED: i8 = 5;
 // datacap
 const ERROR_DATACAP_ARGSLEN: i8 = 5;
 const ERROR_DATACAP_DATA_LIMIT_EXCEEDED: i8 = 6;
+// ic3type
+const ERROR_IC3TYPE_UNAUTHORIZED: i8 = 5;
 // icctype
 const ERROR_ICCTYPE_ARGSLEN: i8 = 5;
 const ERROR_ICCTYPE_UNAUTHORIZED: i8 = 6;
@@ -2163,4 +2165,106 @@ fn test_icctype_args_len_invalid()
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
 	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ICCTYPE_ARGSLEN).input_type_script(0));
+}
+
+#[test]
+fn test_ic3type_invalid()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_ic3type = context.deploy_cell(Loader::default().load_binary("ic3type"));
+
+	// Prepare Cell Deps
+	let mut cell_deps = vec![];
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	cell_deps.push(always_success_dep);
+	let ic3type_dep = CellDep::new_builder().out_point(out_point_ic3type.clone()).build();
+	cell_deps.push(ic3type_dep);
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_ic3type, Default::default()).expect("script");
+
+	// Prepare Input Cells
+	let mut inputs = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input);
+
+	// Prepare Output Cells
+	let mut outputs = vec![];
+	let output = CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+
+	// Prepare Output Data
+	let mut outputs_data = vec![];
+	outputs_data.push(Bytes::new());
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_deps(cell_deps)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_IC3TYPE_UNAUTHORIZED).input_type_script(0));
+}
+
+#[test]
+fn test_ic3type_valid()
+{
+	// Create Context
+	let mut context = Context::default();
+
+	// Deploy Contracts
+	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
+	let out_point_ic3type = context.deploy_cell(Loader::default().load_binary("ic3type"));
+
+	// Prepare Cell Deps
+	let mut cell_deps = vec![];
+	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
+	cell_deps.push(always_success_dep);
+	let ic3type_dep = CellDep::new_builder().out_point(out_point_ic3type.clone()).build();
+	cell_deps.push(ic3type_dep);
+
+	// Prepare Scripts
+	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_ic3type, Default::default()).expect("script");
+
+	// Prepare Input Cells
+	let mut inputs = vec![];
+	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build(), Bytes::new());
+	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input.clone());
+	inputs.push(input.clone());
+	inputs.push(input);
+
+	// Prepare Output Cells
+	let mut outputs = vec![];
+	let output = CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
+	outputs.push(output);
+
+	// Prepare Output Data
+	let mut outputs_data = vec![];
+	outputs_data.push(Bytes::new());
+
+	// Build Transaction
+	let tx = TransactionBuilder::default()
+		.inputs(inputs)
+		.outputs(outputs)
+		.outputs_data(outputs_data.pack())
+		.cell_deps(cell_deps)
+		.build();
+	let tx = context.complete_tx(tx);
+
+	// Run
+	let _cycles = context.verify_tx(&tx, MAX_CYCLES).expect("pass verification");
+	// println!("consume cycles: {}", cycles);
 }
