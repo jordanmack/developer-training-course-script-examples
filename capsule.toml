@@ -49,3 +49,7 @@ template_type = "Rust"
 [[contracts]]
 name = "data10"
 template_type = "Rust"
+
+[[contracts]]
+name = "icctype"
+template_type = "Rust"

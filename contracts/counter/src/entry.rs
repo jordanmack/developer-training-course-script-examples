@@ -6,7 +6,7 @@ use core::result::Result;
 use ckb_std::ckb_constants::Source;
 use ckb_std::high_level::{load_cell_data, load_cell_type_hash, QueryIter};
 
-// Local module imports.
+// Import local modules.
 use crate::error::Error;
 
 // The modes of operation for the script. 

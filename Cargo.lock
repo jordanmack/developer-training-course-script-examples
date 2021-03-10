@@ -1622,6 +1622,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "icctype"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
 name = "idna"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"

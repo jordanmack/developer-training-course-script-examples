@@ -1,5 +1,5 @@
 [workspace]
-members = ["tests", "contracts/always", "contracts/never", "contracts/ckb500", "contracts/occlock", "contracts/icclock", "contracts/hashlock", "contracts/counter", "contracts/jsoncell", "contracts/datacap", "contracts/data10"]
+members = ["tests", "contracts/always", "contracts/never", "contracts/ckb500", "contracts/occlock", "contracts/icclock", "contracts/hashlock", "contracts/counter", "contracts/jsoncell", "contracts/datacap", "contracts/data10", "contracts/icctype"]
 
 [profile.release]
 overflow-checks = true
