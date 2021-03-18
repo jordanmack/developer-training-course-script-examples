@@ -22,6 +22,7 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **jsoncell** - A type script that only allows valid JSON strings to be stored as cell data.
 * **never** - A lock script that never succeeds (unlocks). This is also known as the "Always Fail" lock script.
 * **occlock** - A lock script that does an output capacity check (occ) to verify that at least x output cells have a capacity that matches amount y. The x and y values are specified as lock script args.
+* **scounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is a simplified counter with no burn capability.
 
 ## Usage
 
