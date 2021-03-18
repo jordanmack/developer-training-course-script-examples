@@ -9,55 +9,25 @@ use ckb_std::high_level::{load_cell, load_cell_data, QueryIter};
 // Import local modules.
 use crate::error::Error;
 
-// The modes of operation for the script. 
-enum Mode
-{
-	Burn, // Consume an existing counter cell.
-	Create, // Create a new counter cell.
-	Transfer, // Transfer (update) a counter cell and increase its value.
-}
-
-// Determines the mode of operation for the currently executing script.
-fn determine_mode() -> Result<Mode, Error>
+// Main entry point.
+pub fn main() -> Result<(), Error>
 {
 	// Gather counts on the number of group input and groupt output cells.
 	let group_input_count = QueryIter::new(load_cell, Source::GroupInput).count();
 	let group_output_count = QueryIter::new(load_cell, Source::GroupOutput).count();
 
-	// Detect the operation based on the cell count.
-	if group_input_count == 1 && group_output_count == 0
+	// If there are no inputs, skip validation.
+	if group_input_count == 0
 	{
-		return Ok(Mode::Burn);
-	}
-	if group_input_count == 0 && group_output_count == 1
-	{
-		return Ok(Mode::Create);
-	}
-	if group_input_count == 1 && group_output_count == 1
-	{
-		return Ok(Mode::Transfer);
+		return Ok(());
 	}
 
-	// If no known code structure was used, return an error.
-	Err(Error::InvalidTransactionStructure)
-}
-
-// Validate a transaction to create a counter cell.
-fn validate_create() -> Result<(), Error>
-{
-	// Load the output cell data and verify that the value is 0u64.
-	let cell_data = load_cell_data(0, Source::GroupOutput)?;
-	if cell_data != 0u64.to_le_bytes().to_vec()
+	// If there isn't an exact 1:1 count, give an error.
+	if group_input_count != 1 || group_output_count != 1
 	{
-		return Err(Error::InvalidOutputCellData);	
+		return Err(Error::InvalidTransactionStructure);
 	}
 
-	Ok(())
-}
-
-// Validate a transaction to transfer (update) a counter cell and increase its value.
-fn validate_transfer() -> Result<(), Error>
-{
 	// Load the input cell data and verify that the length is exactly 8, which is the length of a u64.
 	let input_data = load_cell_data(0, Source::GroupInput)?;
 	if input_data.len() != 8
@@ -83,7 +53,7 @@ fn validate_transfer() -> Result<(), Error>
 	buffer.copy_from_slice(&output_data[0..8]);
 	let output_value = u64::from_le_bytes(buffer);
 
-	// Check for an overflow scenario.
+	// Check for a value that will overflow.
 	if input_value == u64::MAX
 	{
 		return Err(Error::CounterValueOverflow);
@@ -93,21 +63,6 @@ fn validate_transfer() -> Result<(), Error>
 	if input_value + 1 != output_value
 	{
 		return Err(Error::InvalidCounterValue);
-	}
-
-	Ok(())
-}
-
-// Main entry point.
-pub fn main() -> Result<(), Error>
-{
-	// Determine the mode and validate as needed.
-	match determine_mode()
-	{
-		Ok(Mode::Burn) => return Ok(()),
-		Ok(Mode::Create) => validate_create()?,
-		Ok(Mode::Transfer) => validate_transfer()?,
-		Err(e) => return Err(e),
 	}
 
 	Ok(())

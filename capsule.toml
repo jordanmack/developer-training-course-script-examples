@@ -57,3 +57,7 @@ template_type = "Rust"
 [[contracts]]
 name = "ic3type"
 template_type = "Rust"
+
+[[contracts]]
+name = "scounter"
+template_type = "Rust"
