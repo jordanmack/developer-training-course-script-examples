@@ -12,7 +12,7 @@ use crate::error::Error;
 // Main entry point.
 pub fn main() -> Result<(), Error>
 {
-	// Gather counts on the number of group input and groupt output cells.
+	// Count on the number of group input and groupt output cells.
 	let group_input_count = QueryIter::new(load_cell, Source::GroupInput).count();
 	let group_output_count = QueryIter::new(load_cell, Source::GroupOutput).count();
 
@@ -52,12 +52,6 @@ pub fn main() -> Result<(), Error>
 	// Convert the output cell data to a u64 value.
 	buffer.copy_from_slice(&output_data[0..8]);
 	let output_value = u64::from_le_bytes(buffer);
-
-	// Check for a value that will overflow.
-	if input_value == u64::MAX
-	{
-		return Err(Error::CounterValueOverflow);
-	}
 
 	// Ensure that the output value is always exactly one more that in the input value.
 	if input_value + 1 != output_value

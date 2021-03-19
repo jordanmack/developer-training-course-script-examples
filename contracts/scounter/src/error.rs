@@ -8,7 +8,6 @@ pub enum Error {
 	LengthNotEnough,
 	Encoding,
 	// Add customized errors here...
-	CounterValueOverflow,
 	InvalidTransactionStructure,
 	InvalidInputCellData,
 	InvalidOutputCellData,

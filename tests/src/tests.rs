@@ -30,11 +30,10 @@ const ERROR_IC3TYPE_UNAUTHORIZED: i8 = 5;
 const ERROR_ICCTYPE_ARGSLEN: i8 = 5;
 const ERROR_ICCTYPE_UNAUTHORIZED: i8 = 6;
 // scounter
-const ERROR_SCOUNTER_COUNTER_VALUE_OVERFLOW: i8 = 5;
-const ERROR_SCOUNTER_INVALID_TRANSACTION_STRUCTURE: i8 = 6;
-const ERROR_SCOUNTER_INVALID_INPUT_CELL_DATA: i8 = 7;
-const ERROR_SCOUNTER_INVALID_OUTPUT_CELL_DATA: i8 = 8;
-const ERROR_SCOUNTER_INVALID_COUNTER_VALUE: i8 = 9;
+const ERROR_SCOUNTER_INVALID_TRANSACTION_STRUCTURE: i8 = 5;
+const ERROR_SCOUNTER_INVALID_INPUT_CELL_DATA: i8 = 6;
+const ERROR_SCOUNTER_INVALID_OUTPUT_CELL_DATA: i8 = 7;
+const ERROR_SCOUNTER_INVALID_COUNTER_VALUE: i8 = 8;
 
 #[test]
 fn test_ckb500_minimum_capacity()
@@ -2727,50 +2726,6 @@ fn test_scounter_transfer_minus_1()
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
 	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
-}
-
-#[test]
-fn test_scounter_transfer_overflow()
-{
-	// Create Context
-	let mut context = Context::default();
-
-	// Deploy Contracts
-	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_counter = context.deploy_cell(Loader::default().load_binary("scounter"));
-
-	// Prepare Cell Deps
-	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let scounter_dep = CellDep::new_builder().out_point(out_point_counter.clone()).build();
-
-	// Prepare Scripts
-	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let type_script = context.build_script(&out_point_counter, Default::default()).expect("script");
-
-	// Prepare Cells
-	let mut inputs = vec![];
-	let mut outputs = vec![];
-	let mut outputs_data: Vec<Bytes> = vec![];
-	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(10_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build(), Bytes::from(u64::MAX.to_le_bytes().to_vec()));
-	let input = CellInput::new_builder().previous_output(input_out_point).build();
-	inputs.push(input);
-	let output = CellOutput::new_builder().capacity(10_000_000_000_u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build();
-	outputs.push(output);
-	outputs_data.push(Bytes::from(0u64.to_le_bytes().to_vec()));
-
-	// Build Transaction
-	let tx = TransactionBuilder::default()
-		.inputs(inputs)
-		.outputs(outputs)
-		.outputs_data(outputs_data.pack())
-		.cell_dep(always_success_dep)
-		.cell_dep(scounter_dep)
-		.build();
-	let tx = context.complete_tx(tx);
-
-	// Run
-	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SCOUNTER_COUNTER_VALUE_OVERFLOW).input_type_script(0));
 }
 
 #[test]
