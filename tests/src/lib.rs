@@ -5,7 +5,27 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[cfg(test)]
-mod tests;
+mod ckb500;
+#[cfg(test)]
+mod counter;
+#[cfg(test)]
+mod data10;
+#[cfg(test)]
+mod datacap;
+#[cfg(test)]
+mod fullcounter;
+#[cfg(test)]
+mod hashlock;
+#[cfg(test)]
+mod ic3type;
+#[cfg(test)]
+mod icclock;
+#[cfg(test)]
+mod icctype;
+#[cfg(test)]
+mod jsoncell;
+#[cfg(test)]
+mod occlock;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

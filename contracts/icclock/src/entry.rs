@@ -20,8 +20,8 @@ pub fn main() -> Result<(), Error>
 	let script = load_script()?;
 	let args: Bytes = script.args().unpack();
 
-	// Verify that the minimum length of the arguments was given.
-	if args.len() < 8
+	// Verify that the correct length of the arguments was given.
+	if args.len() != 8
 	{
 		return Err(Error::ArgsLen);
 	}
