@@ -25,7 +25,7 @@ pub fn main() -> Result<(), Error>
 	{
 		match load_cell(i, Source::Input)
 		{
-			Ok(_cell) => cell_count += 1,
+			Ok(_) => cell_count += 1,
 			Err(SysError::IndexOutOfBound) => break,
 			Err(e) => return Err(e.into())
 		}
