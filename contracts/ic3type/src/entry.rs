@@ -4,7 +4,8 @@ use core::result::Result;
 // Import CKB syscalls and structures.
 // https://nervosnetwork.github.io/ckb-std/riscv64imac-unknown-none-elf/doc/ckb_std/index.html
 use ckb_std::ckb_constants::Source;
-use ckb_std::high_level::{load_cell, QueryIter};
+use ckb_std::high_level::load_cell;
+use ckb_std::error::SysError;
 
 // Import local modules.
 use crate::error::Error;
@@ -19,9 +20,16 @@ pub fn main() -> Result<(), Error>
 	let mut cell_count = 0;
 
 	// Cycle through all the input cells to count them.
-	for _cell in QueryIter::new(load_cell, Source::Input)
+	let mut i = 0;
+	loop
 	{
-		cell_count += 1;
+		match load_cell(i, Source::Input)
+		{
+			Ok(_cell) => cell_count += 1,
+			Err(SysError::IndexOutOfBound) => break,
+			Err(e) => return Err(e.into())
+		}
+		i += 1;
 	}
 
 	// If our cell count matches the requirement then exit successfully.
