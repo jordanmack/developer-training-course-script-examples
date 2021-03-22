@@ -69,3 +69,7 @@ template_type = "Rust"
 [[contracts]]
 name = "datarange"
 template_type = "Rust"
+
+[[contracts]]
+name = "doublecounter"
+template_type = "Rust"

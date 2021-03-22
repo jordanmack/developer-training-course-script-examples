@@ -15,6 +15,8 @@ mod datacap;
 #[cfg(test)]
 mod datarange;
 #[cfg(test)]
+mod doublecounter;
+#[cfg(test)]
 mod fullcounter;
 #[cfg(test)]
 mod hashlock;

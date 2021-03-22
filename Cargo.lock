@@ -1048,6 +1048,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "doublecounter"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
 name = "dtoa"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
