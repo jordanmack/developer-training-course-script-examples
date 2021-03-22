@@ -45,7 +45,7 @@ pub fn main() -> Result<(), Error>
 			}
 		}
 
-		// Increment the index.
+		// Increment the index to process the next cell.
 		i += 1;
 	}
 
