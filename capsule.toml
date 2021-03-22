@@ -61,3 +61,7 @@ template_type = "Rust"
 [[contracts]]
 name = "fullcounter"
 template_type = "Rust"
+
+[[contracts]]
+name = "oc5type"
+template_type = "Rust"
