@@ -18,20 +18,30 @@ pub fn main() -> Result<(), Error>
 	let args: Bytes = script.args().unpack();
 
 	// Verify that correct length of arguments was given.
-	if args.len() != 4
+	if args.len() != 8
 	{
 		return Err(Error::ArgsLen);
 	}
 
-	// Load the cell_data_limit from the script args.
+	// Load cell_data_minimum from the script args.
 	let mut buffer = [0u8; 4];
 	buffer.copy_from_slice(&args[0..4]);
+	let cell_data_minimum = u32::from_le_bytes(buffer);
+
+	// Load cell_data_limit from the script args.
+	let mut buffer = [0u8; 4];
+	buffer.copy_from_slice(&args[4..8]);
 	let cell_data_limit = u32::from_le_bytes(buffer);
 
 	// Load the cell data from each cell.
 	for data in QueryIter::new(load_cell_data, Source::GroupOutput)
 	{
-		if (data.len() as u32) > cell_data_limit
+		if (data.len() as u32) < cell_data_minimum
+		{
+			return Err(Error::DataMinimumNotMet);
+		}
+
+        if (data.len() as u32) > cell_data_limit
 		{
 			return Err(Error::DataLimitExceeded);
 		}

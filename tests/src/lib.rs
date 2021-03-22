@@ -13,6 +13,8 @@ mod data10;
 #[cfg(test)]
 mod datacap;
 #[cfg(test)]
+mod datarange;
+#[cfg(test)]
 mod fullcounter;
 #[cfg(test)]
 mod hashlock;
@@ -24,6 +26,8 @@ mod icclock;
 mod icctype;
 #[cfg(test)]
 mod jsoncell;
+#[cfg(test)]
+mod oc5type;
 #[cfg(test)]
 mod occlock;
 

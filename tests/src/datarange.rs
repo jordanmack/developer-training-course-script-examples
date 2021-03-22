@@ -12,23 +12,27 @@ const ERROR_DATACAP_ARGSLEN: i8 = 5;
 const ERROR_DATACAP_DATA_LIMIT_EXCEEDED: i8 = 6;
 
 #[test]
-fn test_datacap_valid_data()
+fn test_datarange_valid_data()
 {
 	// Create Context
 	let mut context = Context::default();
 
 	// Deploy Contracts
 	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_datacap = context.deploy_cell(Loader::default().load_binary("datacap"));
+	let out_point_datarange = context.deploy_cell(Loader::default().load_binary("datarange"));
 
 	// Prepare Cell Deps
 	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let datacap_dep = CellDep::new_builder().out_point(out_point_datacap.clone()).build();
+	let datarange_dep = CellDep::new_builder().out_point(out_point_datarange.clone()).build();
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let args = 16u32.to_le_bytes().to_vec();
-	let type_script = context.build_script(&out_point_datacap, Bytes::from(args)).expect("script");
+	let mut args = vec!();
+	let mut args_min = 12u32.to_le_bytes().to_vec();
+	args.append(&mut args_min);
+	let mut args_max = 12u32.to_le_bytes().to_vec();
+	args.append(&mut args_max);
+	let type_script = context.build_script(&out_point_datarange, Bytes::from(args)).expect("script");
 
 	// Prepare Cells
 	let mut inputs = vec![];
@@ -47,7 +51,7 @@ fn test_datacap_valid_data()
 		.outputs(outputs)
 		.outputs_data(outputs_data.pack())
 		.cell_dep(always_success_dep)
-		.cell_dep(datacap_dep)
+		.cell_dep(datarange_dep)
 		.build();
 	let tx = context.complete_tx(tx);
 
@@ -57,23 +61,27 @@ fn test_datacap_valid_data()
 }
 
 #[test]
-fn test_datacap_empty_data()
+fn test_datarange_empty_data()
 {
 	// Create Context
 	let mut context = Context::default();
 
 	// Deploy Contracts
 	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_datacap = context.deploy_cell(Loader::default().load_binary("datacap"));
+	let out_point_datarange = context.deploy_cell(Loader::default().load_binary("datarange"));
 
 	// Prepare Cell Deps
 	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let datacap_dep = CellDep::new_builder().out_point(out_point_datacap.clone()).build();
+	let datarange_dep = CellDep::new_builder().out_point(out_point_datarange.clone()).build();
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let args = 16u32.to_le_bytes().to_vec();
-	let type_script = context.build_script(&out_point_datacap, Bytes::from(args)).expect("script");
+	let mut args = vec!();
+	let mut args_min = 0u32.to_le_bytes().to_vec();
+	args.append(&mut args_min);
+	let mut args_max = 10u32.to_le_bytes().to_vec();
+	args.append(&mut args_max);
+	let type_script = context.build_script(&out_point_datarange, Bytes::from(args)).expect("script");
 
 	// Prepare Cells
 	let mut inputs = vec![];
@@ -92,7 +100,7 @@ fn test_datacap_empty_data()
 		.outputs(outputs)
 		.outputs_data(outputs_data.pack())
 		.cell_dep(always_success_dep)
-		.cell_dep(datacap_dep)
+		.cell_dep(datarange_dep)
 		.build();
 	let tx = context.complete_tx(tx);
 
@@ -102,22 +110,22 @@ fn test_datacap_empty_data()
 }
 
 #[test]
-fn test_datacap_empty_args()
+fn test_datarange_empty_args()
 {
 	// Create Context
 	let mut context = Context::default();
 
 	// Deploy Contracts
 	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_datacap = context.deploy_cell(Loader::default().load_binary("datacap"));
+	let out_point_datarange = context.deploy_cell(Loader::default().load_binary("datarange"));
 
 	// Prepare Cell Deps
 	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let datacap_dep = CellDep::new_builder().out_point(out_point_datacap.clone()).build();
+	let datarange_dep = CellDep::new_builder().out_point(out_point_datarange.clone()).build();
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let type_script = context.build_script(&out_point_datacap, Default::default()).expect("script");
+	let type_script = context.build_script(&out_point_datarange, Default::default()).expect("script");
 
 	// Prepare Cells
 	let mut inputs = vec![];
@@ -136,7 +144,7 @@ fn test_datacap_empty_args()
 		.outputs(outputs)
 		.outputs_data(outputs_data.pack())
 		.cell_dep(always_success_dep)
-		.cell_dep(datacap_dep)
+		.cell_dep(datarange_dep)
 		.build();
 	let tx = context.complete_tx(tx);
 
@@ -146,23 +154,27 @@ fn test_datacap_empty_args()
 }
 
 #[test]
-fn test_datacap_data_limit_exceeded()
+fn test_datarange_data_limit_exceeded()
 {
 	// Create Context
 	let mut context = Context::default();
 
 	// Deploy Contracts
 	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_datacap = context.deploy_cell(Loader::default().load_binary("datacap"));
+	let out_point_datarange = context.deploy_cell(Loader::default().load_binary("datarange"));
 
 	// Prepare Cell Deps
 	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let datacap_dep = CellDep::new_builder().out_point(out_point_datacap.clone()).build();
+	let datarange_dep = CellDep::new_builder().out_point(out_point_datarange.clone()).build();
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let args = 16u32.to_le_bytes().to_vec();
-	let type_script = context.build_script(&out_point_datacap, Bytes::from(args)).expect("script");
+	let mut args = vec!();
+	let mut args_min = 1u32.to_le_bytes().to_vec();
+	args.append(&mut args_min);
+	let mut args_max = 16u32.to_le_bytes().to_vec();
+	args.append(&mut args_max);
+	let type_script = context.build_script(&out_point_datarange, Bytes::from(args)).expect("script");
 
 	// Prepare Cells
 	let mut inputs = vec![];
@@ -181,7 +193,7 @@ fn test_datacap_data_limit_exceeded()
 		.outputs(outputs)
 		.outputs_data(outputs_data.pack())
 		.cell_dep(always_success_dep)
-		.cell_dep(datacap_dep)
+		.cell_dep(datarange_dep)
 		.build();
 	let tx = context.complete_tx(tx);
 
@@ -191,23 +203,27 @@ fn test_datacap_data_limit_exceeded()
 }
 
 #[test]
-fn test_datacap_burn()
+fn test_datarange_burn()
 {
 	// Create Context
 	let mut context = Context::default();
 
 	// Deploy Contracts
 	let out_point_always_success = context.deploy_cell(ALWAYS_SUCCESS.clone());
-	let out_point_datacap = context.deploy_cell(Loader::default().load_binary("datacap"));
+	let out_point_datarange = context.deploy_cell(Loader::default().load_binary("datarange"));
 
 	// Prepare Cell Deps
 	let always_success_dep = CellDep::new_builder().out_point(out_point_always_success.clone()).build();
-	let datacap_dep = CellDep::new_builder().out_point(out_point_datacap.clone()).build();
+	let datarange_dep = CellDep::new_builder().out_point(out_point_datarange.clone()).build();
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let args = 16u32.to_le_bytes().to_vec();
-	let type_script = context.build_script(&out_point_datacap, Bytes::from(args)).expect("script");
+	let mut args = vec!();
+	let mut args_min = 1u32.to_le_bytes().to_vec();
+	args.append(&mut args_min);
+	let mut args_max = 16u32.to_le_bytes().to_vec();
+	args.append(&mut args_max);
+	let type_script = context.build_script(&out_point_datarange, Bytes::from(args)).expect("script");
 
 	// Prepare Cells
 	let mut inputs = vec![];
@@ -219,7 +235,7 @@ fn test_datacap_burn()
 	let tx = TransactionBuilder::default()
 		.inputs(inputs)
 		.cell_dep(always_success_dep)
-		.cell_dep(datacap_dep)
+		.cell_dep(datarange_dep)
 		.build();
 	let tx = context.complete_tx(tx);
 

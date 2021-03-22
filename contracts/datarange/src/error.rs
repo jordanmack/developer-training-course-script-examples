@@ -10,6 +10,7 @@ pub enum Error {
 	// Add customized errors here...
 	ArgsLen,
 	DataLimitExceeded,
+    DataMinimumNotMet
 }
 
 impl From<SysError> for Error {

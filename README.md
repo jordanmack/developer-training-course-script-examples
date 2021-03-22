@@ -15,6 +15,7 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **counter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is a simplified counter with no burn capability.
 * **data10** - A type script that limits the amount of data in a cell to 10 bytes.
 * **datacap** - A type script that limits the amount of data to the amount specified in the args.
+* **datarange** - A type script that specifies a valid data range size specified in the args.
 * **fullcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is the full version with operation detection.
 * **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
 * **ic3type** - A type script that succeeds when the total number of input cells is exactly 3.
