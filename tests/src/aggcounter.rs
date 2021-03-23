@@ -581,7 +581,7 @@ fn test_aggcounter_transfer_multiple_mismatch_cell_count_too_few_outputs()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGCOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
 }
 
 #[test]
@@ -648,7 +648,7 @@ fn test_aggcounter_transfer_multiple_mismatch_cell_count_too_many_outputs()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGCOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
 }
 
 #[test]
