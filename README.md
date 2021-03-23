@@ -10,12 +10,14 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 
 ## Available Scripts
 
+* **aggcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is an aggregatable simplified counter with no burn capability. 
 * **always** - A lock script that always succeeds (unlocks). This is also known as the "Always Success" lock script.
 * **ckb500** - A lock script that succeeds when the total input capacity is exactly 500 CKBytes.
 * **counter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is a simplified counter with no burn capability.
 * **data10** - A type script that limits the amount of data in a cell to 10 bytes.
 * **datacap** - A type script that limits the amount of data to the amount specified in the args.
 * **datarange** - A type script that specifies a valid data range size specified in the args.
+* **doublecounter** - A type script that holds two u64 values. The first must be incremented by 1 on every transfer, and the second incremented by 2. This is a simplified counter with no burn capability.
 * **fullcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is the full version with operation detection.
 * **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
 * **ic3type** - A type script that succeeds when the total number of input cells is exactly 3.
