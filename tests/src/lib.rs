@@ -5,35 +5,41 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[cfg(test)]
-mod aggcounter;
-#[cfg(test)]
-mod ckb500;
-#[cfg(test)]
-mod counter;
-#[cfg(test)]
-mod data10;
-#[cfg(test)]
-mod datacap;
-#[cfg(test)]
-mod datarange;
-#[cfg(test)]
-mod doublecounter;
-#[cfg(test)]
-mod fullcounter;
-#[cfg(test)]
-mod hashlock;
-#[cfg(test)]
-mod ic3type;
-#[cfg(test)]
-mod icclock;
-#[cfg(test)]
-mod icctype;
-#[cfg(test)]
-mod jsoncell;
-#[cfg(test)]
-mod oc5type;
-#[cfg(test)]
-mod occlock;
+mod aggdoublecounter;
+
+
+// #[cfg(test)]
+// mod aggcounter;
+// #[cfg(test)]
+// mod aggdoublecounter;
+// #[cfg(test)]
+// mod ckb500;
+// #[cfg(test)]
+// mod counter;
+// #[cfg(test)]
+// mod data10;
+// #[cfg(test)]
+// mod datacap;
+// #[cfg(test)]
+// mod datarange;
+// #[cfg(test)]
+// mod doublecounter;
+// #[cfg(test)]
+// mod fullcounter;
+// #[cfg(test)]
+// mod hashlock;
+// #[cfg(test)]
+// mod ic3type;
+// #[cfg(test)]
+// mod icclock;
+// #[cfg(test)]
+// mod icctype;
+// #[cfg(test)]
+// mod jsoncell;
+// #[cfg(test)]
+// mod oc5type;
+// #[cfg(test)]
+// mod occlock;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 
