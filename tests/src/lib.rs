@@ -5,6 +5,8 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[cfg(test)]
+mod aggcounter;
+#[cfg(test)]
 mod ckb500;
 #[cfg(test)]
 mod counter;

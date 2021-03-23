@@ -73,3 +73,7 @@ template_type = "Rust"
 [[contracts]]
 name = "doublecounter"
 template_type = "Rust"
+
+[[contracts]]
+name = "aggcounter"
+template_type = "Rust"
