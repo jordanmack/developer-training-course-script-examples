@@ -1,6 +1,6 @@
-# Nervos Developer Training Course Scripts
+# Nervos Developer Training Course Script Examples
 
-This repo contains the example scripts (smart contracts) for the Nervos Developer Training Course.
+This repo contains the script examples for the Nervos Developer Training Course.
 
 The content you find here is designed to be used with lessons.
 
