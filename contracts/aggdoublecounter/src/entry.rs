@@ -43,10 +43,15 @@ pub fn main() -> Result<(), Error>
 	// Loop through all the group input cell data.
 	'input_loop: for input_data in group_input_data
 	{
-		// Load the input cell data and convert the data into a u64 value.
+		// Load the first input cell data value and convert the data into a u64 value.
 		let mut buffer = [0u8; 8];
 		buffer.copy_from_slice(&input_data[0..8]);
-		let input_value = u64::from_le_bytes(buffer);
+		let input_value_1 = u64::from_le_bytes(buffer);
+
+		// Load the second input cell data value and convert the data into a u64 value.
+		let mut buffer = [0u8; 8];
+		buffer.copy_from_slice(&input_data[8..16]);
+		let input_value_2 = u64::from_le_bytes(buffer);
 
 		// Loop through all the group output cell data.
 		for (o, output_data) in group_output_data.iter().enumerate()
@@ -54,13 +59,18 @@ pub fn main() -> Result<(), Error>
 			// If the group output cell has not already matched previously.
 			if !group_outputs_matched.contains(&o)
 			{
-				// Load the output cell data and convert the data into a u64 value.
+				// Load the first output cell data and convert the data into a u64 value.
 				let mut buffer = [0u8; 8];
 				buffer.copy_from_slice(&output_data[0..8]);
-				let output_value = u64::from_le_bytes(buffer);
+				let output_value_1 = u64::from_le_bytes(buffer);
+
+				// Load the second output cell data and convert the data into a u64 value.
+				let mut buffer = [0u8; 8];
+				buffer.copy_from_slice(&output_data[8..16]);
+				let output_value_2 = u64::from_le_bytes(buffer);
 
 				// Check if the output is one more than the input.
-				if input_value + 1 == output_value
+				if input_value_1 + 1 == output_value_1 && input_value_2 + 2 == output_value_2
 				{
 					// Mark this output as matched.
 					group_outputs_matched.insert(o);
@@ -72,7 +82,7 @@ pub fn main() -> Result<(), Error>
 		}
 
 		// If no match was found return an error.
-		return Err(Error::InvalidCounterValue1);
+		return Err(Error::InvalidCounterValue);
 	}
 
 	// Return success if all group input and output cells have been checked and no errors were found.

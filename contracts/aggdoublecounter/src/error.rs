@@ -9,8 +9,7 @@ pub enum Error {
 	Encoding,
 	// Add customized errors here...
 	InvalidTransactionStructure,
-	InvalidCounterValue1,
-	InvalidCounterValue2,
+	InvalidCounterValue,
 }
 
 impl From<SysError> for Error {
