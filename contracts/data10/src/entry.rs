@@ -20,8 +20,7 @@ pub fn main() -> Result<(), Error>
 	let script = load_script()?;
 
 	// Load each cell from the outputs.
-	let mut i = 0;
-	for cell in QueryIter::new(load_cell, Source::Output)
+	for (i, cell) in QueryIter::new(load_cell, Source::Output).enumerate()
 	{
 		// Check if there is a type script, and skip to the next cell if there is not.
 		let cell_type_script = &cell.type_();
@@ -44,9 +43,6 @@ pub fn main() -> Result<(), Error>
 				return Err(Error::DataLimitExceeded);
 			}
 		}
-
-		// Increment the index to process the next cell.
-		i += 1;
 	}
 
 	Ok(())
