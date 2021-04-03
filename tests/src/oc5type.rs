@@ -11,7 +11,7 @@ const MAX_CYCLES: u64 = 100_000_000;
 const ERROR_OC5TYPE_UNAUTHORIZED: i8 = 5;
 
 #[test]
-fn test_oc5type_invalid_too_few()
+fn test_oc5type_invalid_too_few_cells()
 {
 	// Create Context
 	let mut context = Context::default();
@@ -35,6 +35,8 @@ fn test_oc5type_invalid_too_few()
 	let mut inputs = vec![];
 	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build(), Bytes::new());
 	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input.clone());
+	inputs.push(input.clone());
 	inputs.push(input);
 
 	// Prepare Output Cells
@@ -61,7 +63,7 @@ fn test_oc5type_invalid_too_few()
 }
 
 #[test]
-fn test_oc5type_invalid_too_many()
+fn test_oc5type_invalid_too_many_cells()
 {
 	// Create Context
 	let mut context = Context::default();
@@ -85,6 +87,8 @@ fn test_oc5type_invalid_too_many()
 	let mut inputs = vec![];
 	let input_out_point = context.create_cell(CellOutput::new_builder().capacity(100_000_000_000u64.pack()).lock(lock_script.clone()).type_(Some(type_script.clone()).pack()).build(), Bytes::new());
 	let input = CellInput::new_builder().previous_output(input_out_point).build();
+	inputs.push(input.clone());
+	inputs.push(input.clone());
 	inputs.push(input);
 
 	// Prepare Output Cells
