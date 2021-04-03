@@ -22,7 +22,7 @@ pub fn main() -> Result<(), Error>
 		return Ok(());
 	}
 
-	// If there isn't an exact 1:1 count, give an error.
+	// If there isn't an exact 1 to 1 count, give an error.
 	if group_input_count != 1 || group_output_count != 1
 	{
 		return Err(Error::InvalidTransactionStructure);
