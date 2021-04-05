@@ -501,11 +501,11 @@ fn test_aggcounter_transfer_multiple()
 
 	// Prepare Output Data
 	let mut outputs_data: Vec<Bytes> = vec![];
+	let data = 1u64.to_le_bytes().to_vec();
+	outputs_data.push(Bytes::from(data));
 	let data = 9001u64.to_le_bytes().to_vec();
 	outputs_data.push(Bytes::from(data));
 	let data = 1_000_000_001u64.to_le_bytes().to_vec();
-	outputs_data.push(Bytes::from(data));
-	let data = 1u64.to_le_bytes().to_vec();
 	outputs_data.push(Bytes::from(data));
 
 	// Build Transaction
