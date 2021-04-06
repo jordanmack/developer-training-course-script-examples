@@ -32,11 +32,8 @@ pub fn main() -> Result<(), Error>
 		return Err(Error::InvalidTransactionStructure);
 	}
 
-	// Retrieve all the group input and group output cell data.
-	let group_input_data: Vec<_> = QueryIter::new(load_cell_data, Source::GroupInput).collect();
-
 	// Loop through all the group input cell data.
-	for (i, input_data) in group_input_data.iter().enumerate()
+	for (i, input_data) in QueryIter::new(load_cell_data, Source::GroupInput).enumerate()
 	{
 		// Load the output data at the same index.
 		let output_data = load_cell_data(i, Source::GroupOutput)?;
