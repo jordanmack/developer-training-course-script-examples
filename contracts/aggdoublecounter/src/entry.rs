@@ -1,10 +1,6 @@
 // Import from `core` instead of from `std` since we are in no-std mode.
 use core::result::Result;
 
-// Import heap related library from `alloc`
-// https://doc.rust-lang.org/alloc/index.html
-use alloc::vec::Vec;
-
 // Import CKB syscalls and structures
 // https://nervosnetwork.github.io/ckb-std/riscv64imac-unknown-none-elf/doc/ckb_std/index.html
 use ckb_std::ckb_constants::Source;
@@ -33,9 +29,10 @@ pub fn main() -> Result<(), Error>
 	}
 
 	// Loop through all the group input cell data.
-	for (i, input_data) in QueryIter::new(load_cell_data, Source::GroupInput).enumerate()
+	for i in 0..group_input_count
 	{
-		// Load the output data at the same index.
+		// Load the input and output data at the current index.
+		let input_data = load_cell_data(i, Source::GroupInput)?;
 		let output_data = load_cell_data(i, Source::GroupOutput)?;
 
 		// Convert the input cell data into u64 values.
