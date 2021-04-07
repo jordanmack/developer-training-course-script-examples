@@ -59,7 +59,7 @@ name = "ic3type"
 template_type = "Rust"
 
 [[contracts]]
-name = "fullcounter"
+name = "odcounter"
 template_type = "Rust"
 
 [[contracts]]

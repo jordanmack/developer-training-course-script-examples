@@ -21,8 +21,6 @@ mod datarange;
 #[cfg(test)]
 mod doublecounter;
 #[cfg(test)]
-mod fullcounter;
-#[cfg(test)]
 mod hashlock;
 #[cfg(test)]
 mod ic3type;
@@ -36,6 +34,8 @@ mod jsoncell;
 mod oc5type;
 #[cfg(test)]
 mod occlock;
+#[cfg(test)]
+mod odcounter;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

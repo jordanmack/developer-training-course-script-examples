@@ -19,7 +19,6 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **datacap** - A type script that limits the amount of data to the amount specified in the args.
 * **datarange** - A type script that specifies a valid data range size specified in the args.
 * **doublecounter** - A type script that holds two u64 values. The first must be incremented by 1 on every transfer, and the second incremented by 2. This is a simplified counter with no burn capability.
-* **fullcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is the full version with operation detection.
 * **hashlock** - A lock script that is secured with a Blake2b hash and unlocked with the preimage.
 * **ic3type** - A type script that succeeds when the total number of input cells is exactly 3.
 * **icclock** - A lock script that does an input capacity check (icc) to verify that at least one input cell has a capacity that matches amount x. The x value is specified in the lock script args.
@@ -28,6 +27,7 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **never** - A lock script that never succeeds (unlocks). This is also known as the "Always Fail" lock script.
 * **occlock** - A lock script that does an output capacity check (occ) to verify that at least x output cells have a capacity that matches amount y. The x and y values are specified as lock script args.
 * **oc5type** - A type script that succeeds when the total number of output cells is exactly 5.
+* **odcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This is the full version with operation detection.
 
 ## Usage
 

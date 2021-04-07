@@ -2,7 +2,8 @@ use ckb_std::error::SysError;
 
 /// Error
 #[repr(i8)]
-pub enum Error {
+pub enum Error
+{
 	IndexOutOfBound = 1,
 	ItemMissing,
 	LengthNotEnough,
@@ -15,10 +16,13 @@ pub enum Error {
 	InvalidCounterValue,
 }
 
-impl From<SysError> for Error {
-	fn from(err: SysError) -> Self {
+impl From<SysError> for Error
+{
+	fn from(err: SysError) -> Self
+	{
 		use SysError::*;
-		match err {
+		match err
+		{
 			IndexOutOfBound => Self::IndexOutOfBound,
 			ItemMissing => Self::ItemMissing,
 			LengthNotEnough(_) => Self::LengthNotEnough,
@@ -27,4 +31,3 @@ impl From<SysError> for Error {
 		}
 	}
 }
-
