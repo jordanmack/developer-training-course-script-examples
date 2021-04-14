@@ -6,7 +6,7 @@
 # docker_image = "jjy0/ckb-capsule-recipe-rust:2020-9-28"
 
 # capsule version
-version = "0.4.4"
+version = "0.4.5"
 # path of deployment config file
 deployment = "deployment.toml"
 
