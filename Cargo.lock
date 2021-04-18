@@ -2121,6 +2121,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "oddoublecounter"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
