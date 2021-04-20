@@ -38,6 +38,8 @@ mod occlock;
 mod odcounter;
 #[cfg(test)]
 mod oddoublecounter;
+#[cfg(test)]
+mod sudt;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

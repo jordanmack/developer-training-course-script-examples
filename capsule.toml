@@ -85,3 +85,7 @@ template_type = "Rust"
 [[contracts]]
 name = "oddoublecounter"
 template_type = "Rust"
+
+[[contracts]]
+name = "sudt"
+template_type = "Rust"
