@@ -1,9 +1,9 @@
-// Import from `core` instead of from `std` since we are in no-std mode
+// Import from core instead of from std since we are in no-std mode.
 use core::result::Result;
 
-// Import heap related library from `alloc`
+// Import heap related library from alloc.
 // https://doc.rust-lang.org/alloc/index.html
-// use alloc::{vec::Vec};
+// use alloc::vec::Vec;
 
 // Import the Blake2b reference library.
 use blake2b_ref::Blake2bBuilder;

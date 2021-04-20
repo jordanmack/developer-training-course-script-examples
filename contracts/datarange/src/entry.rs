@@ -1,4 +1,4 @@
-// Import from `core` instead of from `std` since we are in no-std mode.
+// Import from core instead of from std since we are in no-std mode.
 use core::result::Result;
 
 // Import CKB syscalls and structures.
