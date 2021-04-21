@@ -29,6 +29,7 @@ You can find the full developer training course on [GitBook](https://nervos.gitb
 * **oc5type** - A type script that succeeds when the total number of output cells is exactly 5.
 * **odcounter** - A type script that holds a u64 value that must be incremented by 1 on every transfer. This version includes operation detection and burning.
 * **oddoublecounter** - A type script that holds two u64 values. The first must be incremented by 1 on every transfer, and the second incremented by 2. This version includes operation detection and burning.
+**sudt** - A type script used to create an SUDT token. 
 
 ## Usage
 
