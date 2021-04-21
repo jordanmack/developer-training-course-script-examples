@@ -28,32 +28,39 @@ fn check_owner_mode(args: &Bytes) -> Result<bool, Error>
 	let is_owner_mode = QueryIter::new(load_cell_lock_hash, Source::Input)
 		.find(|lock_hash|args[..]==lock_hash[..]).is_some();
 
-	// 
+	// Return the owner mode status.
 	Ok(is_owner_mode)
 }
 
 /// Count the number of tokens in the specified source. Source should be either GroupInput or GroupOutput.
 fn determine_token_amount(source: Source) -> Result<u128, Error>
 {
+	// Track the number of tokens that are counted.
 	let mut total_token_amount = 0;
 
+	// Cycle through the data in each cell within the specified source.
 	let cell_data = QueryIter::new(load_cell_data, source);
 	for data in cell_data
 	{
+		// Check that the length of the data is >= 16 bytes, the size of a u128.
 		if data.len() >= SUDT_DATA_LEN
 		{
+			// Convert the binary data in the cell to a u128 value.
 			let mut buffer = [0u8; SUDT_DATA_LEN];
 			buffer.copy_from_slice(&data[0..SUDT_DATA_LEN]);
 			let amount = u128::from_le_bytes(buffer);
 
+			// Add the amount of tokens in the cell to the total amount of tokens.
 			total_token_amount += amount;
 		}
+		// If the data is less than 16 bytes, then return an encoding error.
 		else
 		{
 			return Err(Error::Encoding);
 		}
 	}
 
+	// Return the total amount of tokens found in the specified source.
 	Ok(total_token_amount)
 }
 
@@ -81,6 +88,6 @@ pub fn main() -> Result<(), Error>
 		return Err(Error::Amount);
 	}
 
-	// Return success.
+	// No errors were found during validation. Return success.
 	Ok(())
 }
