@@ -1,9 +1,8 @@
 use super::*;
 // use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
 use ckb_testtool::{context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -36,7 +35,7 @@ fn test_ckb500_minimum_capacity()
 	let tx = context.complete_tx(tx);
 
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_CKB500_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_CKB500_UNAUTHORIZED);
 }
 
 #[test]
@@ -123,5 +122,5 @@ fn test_ckb500_over_capacity()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_CKB500_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_CKB500_UNAUTHORIZED);
 }

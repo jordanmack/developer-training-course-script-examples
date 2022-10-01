@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -57,7 +56,7 @@ fn test_aggdoublecounter_burn() // Expected failure. (Not implemented.)
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE);
 }
 
 #[test]
@@ -105,7 +104,7 @@ fn test_aggdoublecounter_burn_multiple() // Expected failure. (Not implemented.)
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE);
 }
 
 #[test]
@@ -556,7 +555,7 @@ fn test_aggdoublecounter_transfer_multiple_mismatch_cell_count_too_few_outputs()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE);
 }
 
 #[test]
@@ -618,7 +617,7 @@ fn test_aggdoublecounter_transfer_multiple_mismatch_cell_count_too_many_outputs(
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_TRANSACTION_STRUCTURE);
 }
 
 #[test]
@@ -672,7 +671,7 @@ fn test_aggdoublecounter_transfer_value_1_plus_2()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_COUNTER_VALUE);
 }
 
 #[test]
@@ -726,7 +725,7 @@ fn test_aggdoublecounter_transfer_value_2_plus_9000()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_AGGDOUBLECOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_script_error(err, ERROR_AGGDOUBLECOUNTER_INVALID_COUNTER_VALUE);
 }
 
 #[test]
@@ -780,7 +779,7 @@ fn test_aggdoublecounter_transfer_overflow_panic_expected()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_UNKNOWN).input_type_script(0));
+	assert_script_error(err, ERROR_UNKNOWN);
 }
 
 #[test]
@@ -834,7 +833,7 @@ fn test_aggdoublecounter_transfer_invalid_input_data_panic_expected()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_UNKNOWN).input_type_script(0));
+	assert_script_error(err, ERROR_UNKNOWN);
 }
 
 #[test]
@@ -888,5 +887,5 @@ fn test_aggdoublecounter_transfer_invalid_output_data_panic_expected()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_UNKNOWN).input_type_script(0));
+	assert_script_error(err, ERROR_UNKNOWN);
 }

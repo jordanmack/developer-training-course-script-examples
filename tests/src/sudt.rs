@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -224,8 +223,8 @@ fn test_sudt_create()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -309,7 +308,7 @@ fn test_sudt_create_no_owner()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SUDT_AMOUNT).output_type_script(0));
+	assert_script_error(err, ERROR_SUDT_AMOUNT);
 }
 
 #[test]
@@ -328,8 +327,8 @@ fn test_sudt_create_zero_token_cell()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -380,8 +379,8 @@ fn test_sudt_create_multiple()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -438,8 +437,8 @@ fn test_sudt_create_multiple_zero_token_cell()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -496,8 +495,8 @@ fn test_sudt_create_no_data()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -578,7 +577,7 @@ fn test_sudt_create_no_script_args()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SUDT_ARGS_LENGTH).output_type_script(0));
+	assert_script_error(err, ERROR_SUDT_ARGS_LENGTH);
 }
 
 #[test]
@@ -597,8 +596,8 @@ fn test_sudt_create_invalid_output_data_value()
 
 	// Prepare Scripts
 	let lock_script = context.build_script(&out_point_always_success, Default::default()).expect("script");
-	let lock_script_hash_owner: [u8; 32] = lock_script.calc_script_hash().unpack();
-	let script_args: Bytes = lock_script_hash_owner.to_vec().into();
+	let lock_script_hash = lock_script.calc_script_hash().unpack().as_bytes().to_vec();
+	let script_args: Bytes = lock_script_hash.into();
 	let type_script = context.build_script(&out_point_sudt, script_args).expect("script");
 
 	// Prepare Input Cells
@@ -854,7 +853,7 @@ fn test_sudt_transfer_invalid_input_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SUDT_ENCODING).input_type_script(0));
+	assert_script_error(err, ERROR_SUDT_ENCODING);
 }
 
 #[test]
@@ -907,5 +906,5 @@ fn test_sudt_transfer_invalid_output_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_SUDT_ENCODING).input_type_script(0));
+	assert_script_error(err, ERROR_SUDT_ENCODING);
 }

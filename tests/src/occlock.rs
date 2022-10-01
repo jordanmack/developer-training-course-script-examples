@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -41,7 +40,7 @@ fn test_occlock_minimum_capacity()
 	let tx = context.complete_tx(tx);
 
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_OCCLOCK_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_OCCLOCK_UNAUTHORIZED);
 }
 
 #[test]
@@ -143,7 +142,7 @@ fn test_occlock_multi_cell_exact_capacity_too_few()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_OCCLOCK_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_OCCLOCK_UNAUTHORIZED);
 }
 
 #[test]
@@ -211,7 +210,7 @@ fn test_occlock_over_capacity()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_OCCLOCK_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_OCCLOCK_UNAUTHORIZED);
 }
 
 #[test]
@@ -241,7 +240,7 @@ fn test_occlock_no_args()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_OCCLOCK_ARGSLEN).input_lock_script(0));
+	assert_script_error(err, ERROR_OCCLOCK_ARGSLEN);
 }
 
 #[test]
@@ -273,5 +272,5 @@ fn test_occlock_wrong_args()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_OCCLOCK_ARGSLEN).input_lock_script(0));
+	assert_script_error(err, ERROR_OCCLOCK_ARGSLEN);
 }

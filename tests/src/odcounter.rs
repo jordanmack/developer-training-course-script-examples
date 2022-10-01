@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -90,7 +89,7 @@ fn test_odcounter_burn_multiple()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_TRANSACTION_STRUCTURE).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_TRANSACTION_STRUCTURE);
 }
 
 #[test]
@@ -168,7 +167,7 @@ fn test_odcounter_create_no_output_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA).output_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA);
 }
 
 #[test]
@@ -207,7 +206,7 @@ fn test_odcounter_create_invalid_output_data_value()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA).output_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA);
 }
 
 #[test]
@@ -246,7 +245,7 @@ fn test_odcounter_create_invalid_output_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA).output_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA);
 }
 
 #[test]
@@ -378,7 +377,7 @@ fn test_odcounter_transfer_plus_2()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_COUNTER_VALUE);
 }
 
 #[test]
@@ -422,7 +421,7 @@ fn test_odcounter_transfer_plus_9000()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_COUNTER_VALUE);
 }
 
 #[test]
@@ -466,7 +465,7 @@ fn test_odcounter_transfer_minus_1()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_COUNTER_VALUE).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_COUNTER_VALUE);
 }
 
 #[test]
@@ -510,7 +509,7 @@ fn test_odcounter_transfer_overflow()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_VALUE_OVERFLOW).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_VALUE_OVERFLOW);
 }
 
 #[test]
@@ -554,7 +553,7 @@ fn test_odcounter_transfer_invalid_input_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_INPUT_CELL_DATA).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_INPUT_CELL_DATA);
 }
 
 #[test]
@@ -598,5 +597,5 @@ fn test_odcounter_transfer_invalid_output_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA).input_type_script(0));
+	assert_script_error(err, ERROR_ODCOUNTER_INVALID_OUTPUT_CELL_DATA);
 }

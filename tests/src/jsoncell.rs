@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 
 // Constants
 const MAX_CYCLES: u64 = 100_000_000;
@@ -228,7 +227,7 @@ fn test_jsoncell_empty_data()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_JSONCELL_INVALID_JSON).output_type_script(0));
+	assert_script_error(err, ERROR_JSONCELL_INVALID_JSON);
 }
 
 #[test]
@@ -272,7 +271,7 @@ fn test_jsoncell_invalid_string()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_JSONCELL_INVALID_JSON).output_type_script(0));
+	assert_script_error(err, ERROR_JSONCELL_INVALID_JSON);
 }
 
 #[test]
@@ -316,5 +315,5 @@ fn test_jsoncell_invalid_utf8()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_JSONCELL_INVALID_STRING_DATA).output_type_script(0));
+	assert_script_error(err, ERROR_JSONCELL_INVALID_STRING_DATA);
 }

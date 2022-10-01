@@ -1,8 +1,7 @@
 use super::*;
 use ckb_testtool::{context::Context};
-use ckb_tool::{ckb_error::assert_error_eq, ckb_script::ScriptError};
-use ckb_tool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
-use ckb_tool::ckb_types::core::{TransactionBuilder};
+use ckb_testtool::ckb_types::{bytes::Bytes, packed::*, prelude::*};
+use ckb_testtool::ckb_types::core::{TransactionBuilder};
 use blake2b_ref::Blake2bBuilder;
 
 // Constants
@@ -87,7 +86,7 @@ fn test_hashlock_no_witness()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_HASHLOCK_WITNESSLOAD).input_lock_script(0));
+	assert_script_error(err, ERROR_HASHLOCK_WITNESSLOAD);
 }
 
 #[test]
@@ -126,7 +125,7 @@ fn test_hashlock_no_args()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_HASHLOCK_ARGSLEN).input_lock_script(0));
+	assert_script_error(err, ERROR_HASHLOCK_ARGSLEN);
 }
 
 #[test]
@@ -167,5 +166,5 @@ fn test_hashlock_incorrect()
 
 	// Run
 	let err = context.verify_tx(&tx, MAX_CYCLES).unwrap_err();
-	assert_error_eq!(err, ScriptError::ValidationFailure(ERROR_HASHLOCK_UNAUTHORIZED).input_lock_script(0));
+	assert_script_error(err, ERROR_HASHLOCK_UNAUTHORIZED);
 }
